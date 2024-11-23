@@ -23,6 +23,7 @@ const server = http.createServer((req, res) => {
             break;
 
             default: res.end("404 page not found");
+            cosolo
         }
     })
    
