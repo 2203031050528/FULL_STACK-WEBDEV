@@ -1,13 +1,18 @@
 import http from "http";
 import fs from "fs";
 import url from "url";
+import express from "express";
+
+
+const app = express();
+
 
 
 const server = http.createServer((req, res) => {
     const log = `${Date.now()}: ${req.url}new req recived \n`;
     const myurl = url.parse(req.url,true);
     console.log(myurl);
-    
+
 
     fs.appendFile("log.text",log,(err,data)=>{
         switch(myurl.pathname){
