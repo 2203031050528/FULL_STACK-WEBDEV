@@ -4,10 +4,8 @@ const mongoose = require('mongoose');
 const data = require('./data.json');
 const PORT = 3000;
 
+
 mongoose.connect('mongodb://127.0.0.1:27017/myfirstdata')
-
-
-
 const user = mongoose.model("User",userSchema);
 // Middleware
 app.use(express.json()); // Parse JSON request body
@@ -51,6 +49,8 @@ const userSchema = new mongoose.Schema({
         enum: ['Male', 'Female', 'Other']
     }
 })
+
+
 // Routes
 app.get('/', (req, res) => {
     res.send('Welcome to the Express App!');
