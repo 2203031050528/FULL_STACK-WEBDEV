@@ -1,12 +1,56 @@
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
 const data = require('./data.json');
 const PORT = 3000;
 
+mongoose.connect('mongodb://127.0.0.1:27017/myfirstdata')
+
+
+
+const user = mongoose.model("User",userSchema);
 // Middleware
 app.use(express.json()); // Parse JSON request body
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request body
 
+
+// schema
+
+
+
+
+const userSchema = new mongoose.Schema({
+    firstname:{
+        type: String,
+        required: true,
+        minlength: 3,
+        maxlength: 20
+    },
+    lastname:{
+        type: String,
+        required: true,
+        minlength: 3,
+        maxlength: 20
+    },
+    email:{
+        type: String,
+        required: true,
+        unique: true,
+        validate: {
+            validator: (value) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value),
+            message: 'Please enter a valid email address'
+        }
+    },
+    jobTitles: {
+        type: Array,
+        required: true,
+    },
+    gender:{
+        type: String,
+        required: true,
+        enum: ['Male', 'Female', 'Other']
+    }
+})
 // Routes
 app.get('/', (req, res) => {
     res.send('Welcome to the Express App!');
