@@ -1,21 +1,24 @@
-const {nanoid} = require('nanoid');
-const url = require('../models/url');
-async function handleGenrateNewShortURL(req,res){
+const URL = require('../models/url'); // Fixed case sensitivity
+const shortid = require('shortid');
+
+async function handleGenerateNewShortURL(req, res) {
     const body = req.body;
-    if (!body.url) return res.status(404).json({error:`url is required`})
-    const shortid = nanoid(8);
+    
+    if (!body.url) {
+        return res.status(404).json({ error: `URL is required` });
+    }
 
-    await URL.createObjectURL({
-        shortid: shortid,
-        redirecturl:body.url,
-        visitHistory:[]
+    const shortId = shortid.generate(); // Generate a unique short ID
 
+    await URL.create({
+        shortid: shortId,
+        redirectUrl: body.url, // Fixed camelCase
+        visitHistory: []
     });
 
-    return response.json ({id: shortid})
-
+    return res.json({ id: shortId }); // Fixed `res`
 }
 
 module.exports = {
-    handleGenrateNewShortURL,
-}
+    handleGenerateNewShortURL, // Fixed typo in function name
+};

@@ -1,34 +1,18 @@
 const express = require("express");
+const {connectmongodb} = require("./connection")
+const {logReqres} = require("./middleware");
 
-const users = require("./MOCK_DATA.json");
-const fs = require("fs");
-
-const mongoose = require("mongoose");
-
+const app = express();
 const PORT = 8000;
-
 const userrouter = require('./routes/user')
-
-mongoose.connect("mongodb://127.0.0.1:27017/mydatabase").then(()=>
-  console.log("Connected to MongoDB")).catch((err)=> console.log("Error connecting to", err));
-
-
-
+connectmongodb("mongodb://127.0.0.1:27017/mydatabase")
 
 // Middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json()); // Add this to handle JSON body
 
-app.use((req, res, next) => {
-  fs.appendFile(
-    "log.txt",
-    `\n ${Date.now()}: ${req.method}: ${req.path}`,
-    (err, data) => {
-      next();
-    }
-  );
-});
 
+app.use(logReqres("log.txt"));
 // Routes
 
 app.use("/users", userRouter);

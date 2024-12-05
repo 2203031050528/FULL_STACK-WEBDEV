@@ -1,8 +1,8 @@
-const express = require('express')
+const express = require('express');
+const { handleGenerateNewShortURL } = require('../controllers/url'); // Fixed typo in function name
 
-const {handleGenrateNewShortURL} = require('../controllers/url')
 const router = express.Router();
 
-router.post("/",handleGenrateNewShortURL)
+router.post('/', handleGenerateNewShortURL); // Handle POST request to generate short URL
 
 module.exports = router;
