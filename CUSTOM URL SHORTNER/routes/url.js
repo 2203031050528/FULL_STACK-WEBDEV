@@ -1,8 +1,33 @@
-const express = require('express');
-const { handleGenerateNewShortURL } = require('../controllers/url'); // Fixed typo in function name
+const express = require("express");
+const {
+  handleGenerateNewShortURL,
+  handleRedirect,
+  handlegetanalytics,
+} = require("../controllers/url");
 
 const router = express.Router();
 
-router.post('/', handleGenerateNewShortURL); // Handle POST request to generate short URL
+// Route to generate a new short URL
+router.post("/", handleGenerateNewShortURL);
+
+router.get("/analytics/:shortid",handlegetanalytics);
+
+// Route to handle redirection
+router.get("/:shortid", handleRedirect);
 
 module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

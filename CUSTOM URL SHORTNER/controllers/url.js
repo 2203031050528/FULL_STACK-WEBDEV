@@ -1,24 +1,63 @@
-const URL = require('../models/url'); // Fixed case sensitivity
-const shortid = require('shortid');
+const shortid = require("shortid");
+const URL = require("../models/url");
 
+// Generate a new short URL
 async function handleGenerateNewShortURL(req, res) {
-    const body = req.body;
-    
-    if (!body.url) {
-        return res.status(404).json({ error: `URL is required` });
-    }
+  const { url } = req.body;
 
-    const shortId = shortid.generate(); // Generate a unique short ID
+  if (!url) {
+    return res.status(400).json({ error: "URL is required" });
+  }
 
-    await URL.create({
-        shortid: shortId,
-        redirectUrl: body.url, // Fixed camelCase
-        visitHistory: []
+  try {
+    const shortId = shortid.generate();
+    const newUrl = await URL.create({
+      shortid: shortId,
+      redirectUrl: url,
+      visitHistory: [],
     });
 
-    return res.json({ id: shortId }); // Fixed `res`
+    res.status(201).json({ shortid: newUrl.shortid });
+  } catch (error) {
+    console.error("Error generating short URL:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}
+
+// Redirect to the original URL
+async function handleRedirect(req, res) {
+  const { shortid } = req.params;
+
+  try {
+    const entry = await URL.findOneAndUpdate(
+      { shortid },
+      { $push: { visitHistory: { timestamp: Date.now() } } },
+      { new: true }
+    );
+
+    if (!entry) {
+      return res.status(404).send("Short URL not found");
+    }
+
+    res.redirect(entry.redirectUrl);
+  } catch (error) {
+    console.error("Error handling redirect:", error.message);
+    res.status(500).send("Internal server error");
+  }
+}
+
+
+async function handlegetanalytics(req, res) {
+    const shortid = req.params.shortid
+    const result = await URL.findOne({shortid});
+    return res.json({
+        totalClicks:result.visitHistory.length,
+        analytics:result.visitHistory,
+    })
 }
 
 module.exports = {
-    handleGenerateNewShortURL, // Fixed typo in function name
+  handleGenerateNewShortURL,
+  handleRedirect,
+  handlegetanalytics
 };

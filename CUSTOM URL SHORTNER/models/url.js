@@ -1,22 +1,14 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const urlSchema = new mongoose.Schema({
-    shortid: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    redirectUrl: { // Renamed for camelCase consistency
-        type: String,
-        required: true
-    },
-    visitHistory: [
-        {
-            timestamp: { type: Number }
-        }
-    ]
-}, { timestamps: true }); // Add timestamps option
+const urlSchema = new mongoose.Schema(
+  {
+    shortid: { type: String, required: true, unique: true },
+    redirectUrl: { type: String, required: true },
+    visitHistory: [{ timestamp: { type: Date, default: Date.now } }],
+  },
+  { timestamps: true } // Adds createdAt and updatedAt fields
+);
 
-const URL = mongoose.model('URL', urlSchema); // Capitalized model name
+const URL = mongoose.model("URL", urlSchema);
 
 module.exports = URL;

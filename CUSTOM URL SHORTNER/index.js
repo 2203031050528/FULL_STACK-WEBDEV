@@ -1,34 +1,29 @@
 const express = require("express");
-const shortid = require("shortid");
-const URL = require("./models/url");
+const { connectMongodb } = require("./connect");
+const urlRoutes = require("./routes/url");
+
 const app = express();
 const PORT = 8000;
-const { connectMongodb } = require("./connect");
 
-const urlroute = require("./routes/url");
-
+// Connect to MongoDB
 connectMongodb("mongodb://127.0.0.1:27017/shorturl").then(() => {
   console.log("Connected to MongoDB");
 });
+
+
+app.set("view engine", "ejs");
+// Middleware
 app.use(express.json());
-app.use("/url", urlroute);
 
-app.get("/:shortid", async(req, res) => {
-  const shortid = req.params.shortid;
-  const entry = await URL.findOneAndUpdate({
-    shortid
-  },{
-    $push:{
-        visitHistory:{
-            timestamp:Date.now()
-        }
-    }
-  });
+// Routes
+app.use("/url", urlRoutes);
 
-  res.redirect(entry.redirectUrl);
+// Fallback route for unknown paths
+app.use((req, res) => {
+  res.status(404).send("Route not found");
+});
 
- });
-
+// Start the server
 app.listen(PORT, () => {
-  console.log(`Server listening on port :${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });
