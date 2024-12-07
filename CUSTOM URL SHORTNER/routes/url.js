@@ -1,5 +1,4 @@
 const express = require("express");
-const URL = require("./models/url");
 const {
   handleGenerateNewShortURL,
   handleRedirect,
@@ -11,24 +10,10 @@ const router = express.Router();
 // Route to generate a new short URL
 router.post("/", handleGenerateNewShortURL);
 
-router.get("/analytics/:shortid",handlegetanalytics);
-
 // Route to handle redirection
 router.get("/:shortid", handleRedirect);
 
+// Route for analytics
+router.get("/analytics/:shortid", handlegetanalytics);
+
 module.exports = router;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

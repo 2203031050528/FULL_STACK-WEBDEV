@@ -6,7 +6,7 @@ const urlSchema = new mongoose.Schema(
     redirectUrl: { type: String, required: true },
     visitHistory: [{ timestamp: { type: Date, default: Date.now } }],
   },
-  { timestamps: true } // Adds createdAt and updatedAt fields
+  { timestamps: true }
 );
 
 const URL = mongoose.model("URL", urlSchema);

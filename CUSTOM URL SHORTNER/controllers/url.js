@@ -2,7 +2,7 @@ const shortid = require("shortid");
 const URL = require("../models/url");
 
 // Generate a new short URL
-async function handleGenerateNewShortURL(req, res) {
+const handleGenerateNewShortURL = async (req, res) => {
   const { url } = req.body;
 
   if (!url) {
@@ -11,23 +11,21 @@ async function handleGenerateNewShortURL(req, res) {
 
   try {
     const shortId = shortid.generate();
-    const newUrl = await URL.create({
+    await URL.create({
       shortid: shortId,
       redirectUrl: url,
       visitHistory: [],
     });
 
-    return res.render("home",{
-      id:shortId,
-    });
+    res.render("home", { id: shortId });
   } catch (error) {
     console.error("Error generating short URL:", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
-}
+};
 
 // Redirect to the original URL
-async function handleRedirect(req, res) {
+const handleRedirect = async (req, res) => {
   const { shortid } = req.params;
 
   try {
@@ -46,20 +44,31 @@ async function handleRedirect(req, res) {
     console.error("Error handling redirect:", error.message);
     res.status(500).send("Internal server error");
   }
-}
+};
 
+// Get analytics
+const handlegetanalytics = async (req, res) => {
+  const { shortid } = req.params;
 
-async function handlegetanalytics(req, res) {
-    const shortid = req.params.shortid
-    const result = await URL.findOne({shortid});
-    return res.json({
-        totalClicks:result.visitHistory.length,
-        analytics:result.visitHistory,
-    })
-}
+  try {
+    const result = await URL.findOne({ shortid });
+
+    if (!result) {
+      return res.status(404).json({ error: "Short URL not found" });
+    }
+
+    res.json({
+      totalClicks: result.visitHistory.length,
+      analytics: result.visitHistory,
+    });
+  } catch (error) {
+    console.error("Error fetching analytics:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 module.exports = {
   handleGenerateNewShortURL,
   handleRedirect,
-  handlegetanalytics
+  handlegetanalytics,
 };
