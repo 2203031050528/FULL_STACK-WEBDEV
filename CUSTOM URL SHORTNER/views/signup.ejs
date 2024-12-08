@@ -1,24 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign-up</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
 </head>
 <body>
-    <h1>Signup page</h1>
-    <form action="/user" method="post">
-        <label for="">Enter your full name</label>
-        <input type="text" required name = "name">
-
-        <label for="">Enter your Email</label>
-        <input type="text" required name = "email">
-
-        <label for="">Enter your password</label>
-        <input type="text" required name = "password">
-
-
-        <button type= "submit">Sign up</button>
-    </form>
+  <h1>Sign Up</h1>
+ 
+  <form action="/user/signup" method="post">
+    <label>Name</label>
+    <input type="text" name="name" required>
+    <label>Email</label>
+    <input type="email" name="email" required>
+    <label>Password</label>
+    <input type="password" name="password" required>
+    <button type="submit">Sign Up</button>
+  </form>
 </body>
 </html>
